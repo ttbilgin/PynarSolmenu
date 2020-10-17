@@ -1,4 +1,5 @@
 # Imports for PyQt5 Lib and Functions to be used
+# -*- coding: utf-8 -*-
 import sys
 import os,io
 import logging
@@ -518,11 +519,11 @@ class SecondWindow(QtWidgets.QDialog):
         self.gulme.setGeometry(185, 5, 70, 60)
         self.gulme.clicked.connect(self.gul)
 
-        self.gozKırpma = QPushButton(self)
-        self.gozKırpma.setStyleSheet(
+        self.gozKirpma = QPushButton(self)
+        self.gozKirpma.setStyleSheet(
             "background-image: url(:/icon/images/kırp.png);background-repeat: no-repeat;border: none;outline: none;")
-        self.gozKırpma.setGeometry(5, 80, 70, 60)
-        self.gozKırpma.clicked.connect(self.gozKirp)
+        self.gozKirpma.setGeometry(5, 80, 70, 60)
+        self.gozKirpma.clicked.connect(self.gozKirp)
 
         self.duzSurat = QPushButton(self)
         self.duzSurat.setStyleSheet(
@@ -530,11 +531,11 @@ class SecondWindow(QtWidgets.QDialog):
         self.duzSurat.setGeometry(95, 80, 70, 60)
         self.duzSurat.clicked.connect(self.duzSuratKoy)
 
-        self.sasırma = QPushButton(self)
-        self.sasırma.setStyleSheet(
-            "background-image: url(:/icon/images/sasırma.png);background-repeat: no-repeat;border: none;outline: none;")
-        self.sasırma.setGeometry(185, 80, 70, 60)
-        self.sasırma.clicked.connect(self.sasirmaKoy)
+        self.sasirma = QPushButton(self)
+        self.sasirma.setStyleSheet(
+            "background-image: url(:/icon/images/sasirma.png);background-repeat: no-repeat;border: none;outline: none;")
+        self.sasirma.setGeometry(185, 80, 70, 60)
+        self.sasirma.clicked.connect(self.sasirmaKoy)
 
     def gulucukKoy(self):
         self.password.setText(":) ")
