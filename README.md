@@ -22,4 +22,4 @@ python proje.py
 ```
 # Programın ekran görüntüsü:
 
-![Pynar](https://github.com/ttbilgin/PynarSolmenu/blob/master/pynar.PNG)
+
