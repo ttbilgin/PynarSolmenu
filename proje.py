@@ -177,33 +177,33 @@ class Ui_MainWindow(object):
         self.verticalLayout_sagMenu = QtWidgets.QVBoxLayout()
         self.verticalLayout_sagMenu.setObjectName("verticalLayout_sagMenu")
         self.frame_sagMenu2 = QtWidgets.QFrame(self.frame_sagMenuParent)
-        self.frame_sagMenu2.setMinimumSize(QtCore.QSize(0, 110))
+        self.frame_sagMenu2.setMinimumSize(QtCore.QSize(0, 75))
         self.frame_sagMenu2.setStyleSheet("background-color: transparent;")
         self.frame_sagMenu2.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_sagMenu2.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_sagMenu2.setObjectName("frame_sagMenu2")
         self.label_imageboy = QtWidgets.QLabel(self.frame_sagMenu2)
-        self.label_imageboy.setGeometry(QtCore.QRect(0, 0, 301, 91))
+        self.label_imageboy.setGeometry(QtCore.QRect(60, 0, 91, 71))
         self.label_imageboy.setStyleSheet("image: url(:/icon/images/boys.png);\n"
                                           "background-color: transparent;")
         self.label_imageboy.setText("")
         self.label_imageboy.setObjectName("label_imageboy")
 
         self.label_ogretbot = QtWidgets.QLabel(self.frame_sagMenu2)
-        self.label_ogretbot.setGeometry(QtCore.QRect(100, 80, 91, 41))
+        self.label_ogretbot.setGeometry(QtCore.QRect(150, 20, 91, 41))
         self.label_ogretbot.setStyleSheet("background-color:transparent;\n"
                                           "font: 14pt \"Bahnschrift\";\n"
                                           "color: rgb(122, 122, 122);")
         self.label_ogretbot.setObjectName("label_ogretbot")
         self.verticalLayout_sagMenu.addWidget(self.frame_sagMenu2)
         self.frame_sagMenu1 = QtWidgets.QFrame(self.frame_sagMenuParent)
-        self.frame_sagMenu1.setMinimumSize(QtCore.QSize(0, 114))
+        self.frame_sagMenu1.setMinimumSize(QtCore.QSize(0, 75))
         self.frame_sagMenu1.setStyleSheet("    background-color: #cad7e0 ;\n")
         self.frame_sagMenu1.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_sagMenu1.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_sagMenu1.setObjectName("frame_sagMenu1")
         self.textEdit_balonArkaPlan = QtWidgets.QTextEdit(self.frame_sagMenu1)
-        self.textEdit_balonArkaPlan.setGeometry(QtCore.QRect(-5, 0, 391, 71))
+        self.textEdit_balonArkaPlan.setGeometry(QtCore.QRect(-5, 0, 391, 51))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -217,7 +217,7 @@ class Ui_MainWindow(object):
                                                   "    border:0;  /* kenarlık olmasın */")
         self.textEdit_balonArkaPlan.setObjectName("textEdit_balonArkaPlan")
         self.label_bubble = QtWidgets.QLabel(self.frame_sagMenu1)
-        self.label_bubble.setGeometry(QtCore.QRect(0, 40, 101, 81))
+        self.label_bubble.setGeometry(QtCore.QRect(0, 0, 91, 81))
         self.label_bubble.setStyleSheet("background-color:transparent;\n"
                                         "image: url(:/icon/images/bubble.png);")
         self.label_bubble.setText("")
@@ -249,7 +249,7 @@ class Ui_MainWindow(object):
         self.frame_sagMenu3.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_sagMenu3.setObjectName("frame_sagMenu3")
         self.lineEdit_sendMessage = QtWidgets.QLineEdit(self.frame_sagMenu3)
-        self.lineEdit_sendMessage.setGeometry(QtCore.QRect(-0, 20, 250, 55))
+        self.lineEdit_sendMessage.setGeometry(QtCore.QRect(0, 20, 307, 55))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -279,25 +279,6 @@ class Ui_MainWindow(object):
         self.pushButton_smile.setIcon(icon)
         self.pushButton_smile.setIconSize(QtCore.QSize(45, 45))
         self.pushButton_smile.setObjectName("pushButton_smile")
-        self.pushButton_messageSend = QtWidgets.QPushButton(self.frame_sagMenu3)
-        self.pushButton_messageSend.setGeometry(QtCore.QRect(247, 15, 61, 61))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pushButton_messageSend.sizePolicy().hasHeightForWidth())
-        self.pushButton_messageSend.setSizePolicy(sizePolicy)
-        self.pushButton_messageSend.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
-        self.pushButton_messageSend.setStyleSheet("background-color: transparent;\n"
-                                                  "background-repeat: no-repeat;\n"
-                                                  "margin:0px;\n"
-                                                  "padding:0px;\n"
-                                                  "")
-        self.pushButton_messageSend.setText("")
-        icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/icon/images/send_dark.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.pushButton_messageSend.setIcon(icon1)
-        self.pushButton_messageSend.setIconSize(QtCore.QSize(60, 65))
-        self.pushButton_messageSend.setObjectName("pushButton_messageSend")
         self.verticalLayout_sagMenu.addWidget(self.frame_sagMenu3)
         self.gridLayout_2.addLayout(self.verticalLayout_sagMenu, 0, 0, 1, 1)
         self.gridLayout.addWidget(self.frame_sagMenuParent, 0, 0, 1, 1)
@@ -320,8 +301,7 @@ class Ui_MainWindow(object):
         self.pushButton_searchEdit = QtWidgets.QPushButton(self.frame)
         self.pushButton_searchEdit.setGeometry(QtCore.QRect(250, 10, 50, 45))
         self.pushButton_searchEdit.setStyleSheet("background-image:url(:/icon/search.png);\n"
-"background-repeat: no-repeat;\n"
-"background-image: url(:/icon/search.png);\n")
+"background-repeat: no-repeat;\n")
         self.pushButton_searchEdit.setText("")
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/icon/images/search.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -349,7 +329,7 @@ class Ui_MainWindow(object):
         self.pushButton_add.setObjectName("pushButton_add")
         self.horizontalLayout_2.addWidget(self.pushButton_add)
         self.pushButton_document = QtWidgets.QPushButton(self.horizontalLayoutWidget_2)
-        self.pushButton_document.setStyleSheet("background-image: url(:/icon/document.png);\n"
+        self.pushButton_document.setStyleSheet("background-image: url(:/icon/images/document.png);\n"
 "background-color: transparent;\n"
 "background-repeat: no-repeat;")
         self.pushButton_document.setText("")
@@ -363,7 +343,7 @@ class Ui_MainWindow(object):
         self.pushButton_play = QtWidgets.QPushButton(self.horizontalLayoutWidget_2)
         self.pushButton_play.setStyleSheet("background-color: transparent;\n"
 "background-repeat: no-repeat;\n"
-"background-image: url(:/icon/play.png);")
+"background-image: url(:/icon/images/play.png);")
         self.pushButton_play.setText("")
         icon3 = QtGui.QIcon()
         icon3.addPixmap(QtGui.QPixmap(":/icon/images/play_dark.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -380,7 +360,7 @@ class Ui_MainWindow(object):
         self.frame_header.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_header.setObjectName("frame_header")
         self.label_baslik = QtWidgets.QLabel(self.frame_header)
-        self.label_baslik.setGeometry(QtCore.QRect(-450, 30, 1721, 111))
+        self.label_baslik.setGeometry(QtCore.QRect(-649, 30, 1721, 111))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -392,7 +372,7 @@ class Ui_MainWindow(object):
         self.label_baslik.setText("")
         self.label_baslik.setObjectName("label_baslik")
         self.label_logo = QtWidgets.QLabel(self.frame_header)
-        self.label_logo.setGeometry(QtCore.QRect(6, 0, 141, 131))
+        self.label_logo.setGeometry(QtCore.QRect(6, 0, 140, 131))
         self.label_logo.setStyleSheet("image: url(:/icon/images/logo.png);")
         self.label_logo.setText("")
         self.label_logo.setObjectName("label_logo")
@@ -584,9 +564,6 @@ class proje(QMainWindow):
         self.ui.pushButton_play.released.connect(self.PlayButtonReleased)
         self.ui.pushButton_add.pressed.connect(self.AddButtonPressed)
         self.ui.pushButton_add.released.connect(self.AddButtonReleased)
-        self.ui.pushButton_messageSend.pressed.connect(self.MessageSendButtonPressed)
-        self.ui.pushButton_messageSend.released.connect(self.MessageSendButtonReleased)
-        self.ui.pushButton_messageSend.clicked.connect(self.AddToChatLogUser)
         self.ui.pushButton_smile.clicked.connect(self.emojiPage)
         self.ui.pushButton_document.pressed.connect(self.DocumentButtonPressed)
         self.ui.pushButton_document.released.connect(self.DocumentButtonReleased)
@@ -607,12 +584,8 @@ class proje(QMainWindow):
         self.setWindowTitle("Python Kod Editörü")
         self.setWindowIcon(QIcon(':/icon/images/logo.png'))
         self.ui.lineEdit_sendMessage.returnPressed.connect(self.AddToChatLogUser)
-
         self.ui.lineEdit_sendMessage.setEnabled(True)
         self.ui.lineEdit_sendMessage.setFocus()
-
-
-
     # butona tıklandığında hem ikinici ekranı göstersin hem de tıklanılan emojiyi lineEdit_sendMessage yazsın
     def emojiPage(self):
         self.SW = SecondWindow()
@@ -720,7 +693,7 @@ class proje(QMainWindow):
             data = data.replace(word, "<span style=\" color:#aa007f;\">" + word + "</span>")
 
         data = data.replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;")
-        self.ui.textEdit_kodBlogu.setText(data)
+        self.ui.textEdit_kodBlogu.append(data)
 
     def ReadFromFile(self):
         with open(os.path.abspath('solmenu.json'), encoding='utf-8') as f:
@@ -808,10 +781,7 @@ class proje(QMainWindow):
     # endregion
 
     # region PressedReleasedCodes
-    def MessageSendButtonReleased(self):
-        self.ui.pushButton_messageSend.setIcon(QIcon(":/icon/images/send_dark.png"))
-    def MessageSendButtonPressed(self):
-        self.ui.pushButton_messageSend.setIcon(QIcon(":/icon/images/send_light.png"))
+
     def AddButtonPressed(self):
         self.ui.addButton.setIcon(QIcon(":/icon/images/add_light.png"))
     def AddButtonReleased(self):
