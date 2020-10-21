@@ -2,7 +2,7 @@
   <qresource prefix="icon">
     <file>images/add_dark.png</file>
     <file>images/add_light.png</file>
-	<file>images/boys.png</file>
+	<file>images/robot.png</file>
 	<file>images/branch-closed.png</file>
 	<file>images/branch-end.png</file>
 	<file>images/branch-more.png</file>

@@ -177,55 +177,20 @@ class Ui_MainWindow(object):
         self.verticalLayout_sagMenu = QtWidgets.QVBoxLayout()
         self.verticalLayout_sagMenu.setObjectName("verticalLayout_sagMenu")
         self.frame_sagMenu2 = QtWidgets.QFrame(self.frame_sagMenuParent)
-        self.frame_sagMenu2.setMinimumSize(QtCore.QSize(0, 75))
-        self.frame_sagMenu2.setStyleSheet("background-color: transparent;")
+        self.frame_sagMenu2.setMinimumSize(QtCore.QSize(0, 70))
+        self.frame_sagMenu2.setStyleSheet("background-color: #008efe;")
         self.frame_sagMenu2.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_sagMenu2.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_sagMenu2.setObjectName("frame_sagMenu2")
-        self.label_imageboy = QtWidgets.QLabel(self.frame_sagMenu2)
-        self.label_imageboy.setGeometry(QtCore.QRect(60, 0, 91, 71))
-        self.label_imageboy.setStyleSheet("image: url(:/icon/images/boys.png);\n"
+        self.label_robot = QtWidgets.QLabel(self.frame_sagMenu2)
+        self.label_robot.setGeometry(QtCore.QRect(20, 0, 91, 71))
+        self.label_robot.setStyleSheet("image: url(:/icon/images/robot.png);\n"
                                           "background-color: transparent;")
-        self.label_imageboy.setText("")
-        self.label_imageboy.setObjectName("label_imageboy")
+        self.label_robot.setText("")
+        self.label_robot.setObjectName("label_robot")
 
-        self.label_ogretbot = QtWidgets.QLabel(self.frame_sagMenu2)
-        self.label_ogretbot.setGeometry(QtCore.QRect(150, 20, 91, 41))
-        self.label_ogretbot.setStyleSheet("background-color:transparent;\n"
-                                          "font: 14pt \"Bahnschrift\";\n"
-                                          "color: rgb(122, 122, 122);")
-        self.label_ogretbot.setObjectName("label_ogretbot")
         self.verticalLayout_sagMenu.addWidget(self.frame_sagMenu2)
-        self.frame_sagMenu1 = QtWidgets.QFrame(self.frame_sagMenuParent)
-        self.frame_sagMenu1.setMinimumSize(QtCore.QSize(0, 75))
-        self.frame_sagMenu1.setStyleSheet("    background-color: #cad7e0 ;\n")
-        self.frame_sagMenu1.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.frame_sagMenu1.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.frame_sagMenu1.setObjectName("frame_sagMenu1")
-        self.textEdit_balonArkaPlan = QtWidgets.QTextEdit(self.frame_sagMenu1)
-        self.textEdit_balonArkaPlan.setGeometry(QtCore.QRect(-5, 0, 391, 51))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.textEdit_balonArkaPlan.sizePolicy().hasHeightForWidth())
-        self.textEdit_balonArkaPlan.setSizePolicy(sizePolicy)
-        self.textEdit_balonArkaPlan.setStyleSheet("    color: white;\n"
-                                                  "    font-family: \"Verdana\"; \n"
-                                                  "    font-size: 15pt; \n"
-                                                  "    font-weight: 475;\n"
-                                                  "    background-color: #307EA4;\n"
-                                                  "    border:0;  /* kenarlık olmasın */")
-        self.textEdit_balonArkaPlan.setObjectName("textEdit_balonArkaPlan")
-        self.label_bubble = QtWidgets.QLabel(self.frame_sagMenu1)
-        self.label_bubble.setGeometry(QtCore.QRect(0, 0, 91, 81))
-        self.label_bubble.setStyleSheet("background-color:transparent;\n"
-                                        "image: url(:/icon/images/bubble.png);")
-        self.label_bubble.setText("")
-        self.label_bubble.setObjectName("label_bubble")
-        self.textEdit_balonArkaPlan.raise_()
-        self.label_bubble.raise_()
-        self.frame_sagMenu2.raise_()
-        self.verticalLayout_sagMenu.addWidget(self.frame_sagMenu1)
+
         self.textEdit_message = QtWidgets.QTextEdit(self.frame_sagMenuParent)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -237,7 +202,7 @@ class Ui_MainWindow(object):
                                             "    font-size: 10pt; \n"
                                             "    font-weight: 475;\n"
                                             "    text-align: right;   \n"
-                                            "    background-color: #cad7e0 ;\n"
+                                            "    background-color: #cad7e0;\n"  
                                             "    border:0;  /* kenarlık olmasın */\n"
                                             "")
         self.textEdit_message.setObjectName("textEdit_message")
@@ -401,7 +366,7 @@ class Ui_MainWindow(object):
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:16pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">&gt;&gt;&gt;</p></body></html>"))
-        self.label_ogretbot.setText(_translate("MainWindow", "ÖĞRETBOT"))
+
 
 
 ballon="""
