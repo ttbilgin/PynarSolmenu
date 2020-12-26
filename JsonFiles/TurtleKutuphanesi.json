@@ -1,0 +1,9 @@
+{
+
+	"Turtle Kütüphanesi":
+	{
+	"Turtle" :{
+			"örnek" : "for i in range(10):\n\tprint(i)"
+			}
+	}
+}

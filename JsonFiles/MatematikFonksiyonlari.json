@@ -1,0 +1,13 @@
+{
+
+"Matematik Fonksiyonları":
+	{
+	"Min-Max" :{
+			"örnek" : "y = max(5, 10, 25)\nprint(y)"
+			},
+	"Mutlak Değer" :{
+			"örnek" : "x = abs(-7.25)\nprint(x)"
+			}
+	}
+
+}

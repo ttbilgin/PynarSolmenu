@@ -1,0 +1,58 @@
+{
+	"Temel \n Komutlar":
+	{
+		"icon":"images/temel.png",
+		"jsonfile":"temelkomutlar.json",
+		"actionname":"action_basic"
+	},
+	"Döngüler":
+	{
+		"icon": "images/loops.png",
+		"jsonfile":"donguler.json",
+		"actionname":"action_loop"
+	},
+	"Matematik \n Fonksiyonları":
+	{
+		"icon": "images/calculator.png",
+		"jsonfile":"matematikfonksiyonlari.json",
+		"actionname":"action_math"
+	},
+	"Turtle \n Kütüphanesi":
+	{
+		"icon": "images/turtle.png",
+		"jsonfile":"turtlekutuphanesi.json",
+		"actionname":"action_turtle"
+	},
+
+
+	"Temel \n Komutlar2":
+	{
+		"icon":"images/temel.png",
+		"jsonfile":"temelkomutlar.json",
+		"actionname":"action_basic"
+	},
+	"Döngüler2":
+	{
+		"icon": "images/loops.png",
+		"jsonfile":"donguler.json",
+		"actionname":"action_loop"
+	},
+	"Matematik \n Fonk.":
+	{
+		"icon": "images/calculator.png",
+		"jsonfile":"matematikfonksiyonlari.json",
+		"actionname":"action_math"
+	},
+	"Turtle \n Kütüp.":
+	{
+		"icon": "images/turtle.png",
+		"jsonfile":"turtlekutuphanesi.json",
+		"actionname":"action_turtle"
+	},
+		"Turtle \n Kütüp2.":
+	{
+		"icon": "images/turtle.png",
+		"jsonfile":"turtlekutuphanesi.json",
+		"actionname":"action_turtle"
+	}
+}

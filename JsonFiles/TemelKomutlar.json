@@ -1,0 +1,19 @@
+{
+
+	"Array":
+	{
+	"len" :{
+			"örnek" : "for i in range(10):\n\tprint(i)"
+			}
+	},
+    "Tipler":
+	{
+	"str" :{
+			"örnek" : "y = max(5, 10, 25)\nprint(y)"
+			},
+	"float" :{
+			"örnek" : "x = abs(-7.25)\nprint(x)"
+			}
+	}
+
+}

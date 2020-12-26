@@ -1,0 +1,12 @@
+{
+
+	"Döngüler":
+	{
+	"For Döngüleri" :{
+			"örnek" : "for i in range(10):\n\tprint(i)"
+			},
+	"While Döngüleri" :{
+			"örnek" : "i = 1\nwhile i < 6:\n\tprint(i)\n\ti += 2"
+			}
+	}
+}
