@@ -1,7 +1,7 @@
 # Imports for PyQt5 Lib and Functions to be used
 # -*- coding: utf-8 -*-
 import sys
-import os,io
+import os, io
 import logging
 import json, requests
 from cevapVer import Chat
@@ -10,14 +10,19 @@ from PyQt5.QtSql import QSqlDatabase
 from sqlDialog import SqlKonusmaModeli
 from cevapVer import pairs, reflections
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt,QModelIndex, QDir, QFile, QUrl, Qt, QSize
-from PyQt5.QtGui import QStandardItemModel, QStandardItem, QColor,QIcon,QBrush,QGuiApplication, QFont, QTextCursor, QIcon
-from PyQt5.QtWidgets import QWidget,QApplication, QTextEdit, QPushButton, QLabel, QDesktopWidget, QMainWindow, QAbstractItemView
-
+from PyQt5.QtCore import QDir, QFile, Qt, QSize
+from PyQt5.QtGui import QStandardItemModel, QStandardItem, QIcon
+from PyQt5.QtWidgets import QWidget, QApplication, QPushButton, QDesktopWidget, QMainWindow, QAbstractItemView, \
+    QVBoxLayout, QLayout, QHBoxLayout
+from PyQt5.QtWebEngineWidgets import *
+from os import listdir
+from os.path import isfile, join
 
 logging.basicConfig(filename="chat.log", level=logging.DEBUG)
 logger = logging.getLogger("logger")
 
+
+# region Veritabanı bağlantı işlemleri
 def veritabaniBaglan():
     veritabani = QSqlDatabase.database()
     if not veritabani.isValid():
@@ -39,96 +44,114 @@ def veritabaniBaglan():
         QFile.remove(dosyaAdi)
 
 
-#region interfaceCodes
+# endregion
+
+# region interfaceCodes
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1200, 754)
-        MainWindow.setMinimumSize(QtCore.QSize(1200, 750))
+        MainWindow.setMinimumSize(QtCore.QSize(1330, 750))
+
+        self.centralwidget = QtWidgets.QWidget(MainWindow)
+        self.centralwidget.setObjectName("centralwidget")
+        self.centralwidget.setStyleSheet("background-color: #394b58;")  # TODO:
+        self.frame_show = QtWidgets.QFrame(self.centralwidget)
+        self.frame_show.setGeometry(QtCore.QRect(130, 30, 261, 261))
+        self.frame_show.setStyleSheet("")
+        self.frame_show.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame_show.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame_show.setObjectName("frame_show")
+        MainWindow.setCentralWidget(self.centralwidget)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setMinimumSize(QtCore.QSize(0, 600))
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
+        self.gridLayout.setContentsMargins(0, 0, 0, 0)
         self.gridLayout.setObjectName("gridLayout")
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
+        self.leftMenuLayout = QtWidgets.QVBoxLayout()
+        self.leftMenuLayout.setObjectName("leftMenuLayout")
+        self.horizontalLayout.addLayout(self.leftMenuLayout)
         self.treeView = QtWidgets.QTreeView(self.centralwidget)
-        self.treeView.setMinimumSize(QtCore.QSize(300, 500))
-        self.treeView.setMaximumSize(QtCore.QSize(350, 16777215))
+        self.treeView.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.treeView.setMinimumSize(QtCore.QSize(341, 500))
+        self.treeView.setMaximumSize(QtCore.QSize(341, 16777215))
         self.treeView.setStyleSheet("QTreeView {\n"
-"    background-color: rgb(255, 255, 255);\n"
-"    border: 1px solid;\n"
-"    border-color: rgb(255, 255, 255);\n"
-"    border-radius: 8px 8px 8px 8px;\n"
-"    padding: 10px;\n"
-"    outline: 0px;\n"
-"    font:   rgb(255, 255, 255);\n"
-"    font:  16pt \"MS Shell Dlg 2\";\n"
-"}\n"
-"\n"
-"QTreeView::item {\n"
-"         border-radius: 10px 10px 10px 10px;       \n"
-"         border: 3px solid  rgb(0, 170, 255);                \n"
-"         height: 50px;                            \n"
-"         padding-left: 20px;                      \n"
-"         margin:10px;       \n"
-"          /*#B3E5FC;#b9e6fb;   */\n"
-"         background-color:  #b9e6fb;\n"
-"         color: rgb(0, 170, 255);      \n"
-"    }\n"
-"\n"
-"QTreeView::item::hover {\n"
-"       background-color:  rgb(255, 255, 255);\n"
-"}\n"
-"\n"
-"QTreeView::branch:has-siblings:!adjoins-item {\n"
-"    border-image: url(:/icon/images/vline.png) 0;\n" 
-"}\n"
-"\n"
-"QTreeView::branch:has-siblings:adjoins-item {\n"
-"    border-image: url(:/icon/images/branch-more.png) 0;\n"
-"}\n"
-"\n"
-"QTreeView::branch:!has-children:!has-siblings:adjoins-item {\n"
-"    border-image: url(:/icon/images/branch-end.png) 0;\n"
-"}\n"
-"\n"
-"QTreeView::branch:has-children:!has-siblings:closed,\n"
-"QTreeView::branch:closed:has-children:has-siblings {\n"
-"        border-image: none;\n"
-"        image: url(:/icon/images/branch-closed.png);\n"
-"}\n"
-"\n"
-"QTreeView::branch:open:has-children:!has-siblings,\n"
-"QTreeView::branch:open:has-children:has-siblings  {\n"
-"        border-image: none;\n"
-"        image: url(:/icon/images/branch-open.png);\n"
-"}\n"
-"\n"
-"QTreeView::item:!has-children{\n"
-"\n"
-"      border-radius: 0px 0px 0px 0px;\n"
-"      border:3px solid  #e7a61a;  \n"
-"      height: 50px;\n"
-"      padding-left: 20px;                      \n"
-"      margin:10px;                      \n"
-"      background-color: #e7a61a;        \n"
-"      color: rgb(255, 255, 255);\n"
-"\n"
-"}\n"
-"QTreeView::item:!has-children::hover {\n"
-"      border-radius: 0px 0px 0px 0px;\n"
-"      border: 3px solid #e7a61a;\n"
-"      height: 50px;                        \n"
-"      padding-left: 20px;                      \n"
-"      margin:10px;                      \n"
-"      background-color:  rgb(255, 255, 255); \n"
-"      color: #e7a61a;\n"
-"}\n"
-"\n"
-"\n"
-"")
+                                    "    background-color: rgb(255, 255, 255);\n"
+                                    "    border: 1px solid;\n"
+                                    "    border-color: rgb(255, 255, 255);\n"
+                                    "    border-radius: 8px 8px 8px 8px;\n"
+                                    "    padding: 10px;\n"
+                                    "    outline: 0px;\n"
+                                    "    font:   rgb(255, 255, 255);\n"
+                                    "    font:  16pt \"MS Shell Dlg 2\";\n"
+                                    "}\n"
+                                    "\n"
+                                    "QTreeView::item {\n"
+                                    "         border-radius: 10px 10px 10px 10px;       \n"
+                                    "         border: 3px solid  rgb(0, 170, 255);                \n"
+                                    "         height: 50px;                            \n"
+                                    "         padding-left: 20px;                      \n"
+                                    "         margin:10px;       \n"
+                                    "          /*#B3E5FC;#b9e6fb;   */\n"
+                                    "         background-color:  #b9e6fb;\n"
+                                    "         color: rgb(0, 170, 255);      \n"
+                                    "    }\n"
+                                    "\n"
+                                    "QTreeView::item::hover {\n"
+                                    "       background-color:  rgb(255, 255, 255);\n"
+                                    "}\n"
+                                    "\n"
+                                    "QTreeView::branch:has-siblings:!adjoins-item {\n"
+                                    "    border-image: url(images/vline.png) 0;\n"
+                                    "}\n"
+                                    "\n"
+                                    "QTreeView::branch:has-siblings:adjoins-item {\n"
+                                    "    border-image: url(images/branch-more.png) 0;\n"
+                                    "}\n"
+                                    "\n"
+                                    "QTreeView::branch:!has-children:!has-siblings:adjoins-item {\n"
+                                    "    border-image: url(images/branch-end.png) 0;\n"
+                                    "}\n"
+                                    "\n"
+                                    "QTreeView::branch:has-children:!has-siblings:closed,\n"
+                                    "QTreeView::branch:closed:has-children:has-siblings {\n"
+                                    "        border-image: none;\n"
+                                    "        image: url(images/branch-closed.png);\n"
+                                    "}\n"
+                                    "\n"
+                                    "QTreeView::branch:open:has-children:!has-siblings,\n"
+                                    "QTreeView::branch:open:has-children:has-siblings  {\n"
+                                    "        border-image: none;\n"
+                                    "        image: url(images/branch-open.png);\n"
+                                    "}\n"
+                                    "\n"
+                                    "QTreeView::item:!has-children{\n"
+                                    "\n"
+                                    "      border-radius: 0px 0px 0px 0px;\n"
+                                    "      border:3px solid  #e7a61a;  \n"
+                                    "      height: 50px;\n"
+                                    "      padding-left: 20px;                      \n"
+                                    "      margin:10px;                      \n"
+                                    "      background-color: #e7a61a;        \n"
+                                    "      color: rgb(255, 255, 255);\n"
+                                    "\n"
+                                    "}\n"
+                                    "QTreeView::item:!has-children::hover {\n"
+                                    "      border-radius: 0px 0px 0px 0px;\n"
+                                    "      border: 3px solid #e7a61a;\n"
+                                    "      height: 50px;                        \n"
+                                    "      padding-left: 20px;                      \n"
+                                    "      margin:10px;                      \n"
+                                    "      background-color:  rgb(255, 255, 255); \n"
+                                    "      color: #e7a61a;\n"
+                                    "}\n"
+                                    "\n"
+                                    "\n"
+                                    "")
         self.treeView.setItemsExpandable(True)
         self.treeView.setObjectName("treeView")
         self.horizontalLayout.addWidget(self.treeView)
@@ -138,11 +161,11 @@ class Ui_MainWindow(object):
         self.textEdit_kodBlogu.setMinimumSize(QtCore.QSize(500, 100))
         self.textEdit_kodBlogu.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.textEdit_kodBlogu.setStyleSheet("border: 1px solid;\n"
-"font: 16pt \"MS Shell Dlg 2\";\n"
-"border-radius: 8px 8px 8px 8px;\n"
-"background-color: palette(base);\n"
-"color: rgb(102, 102, 102);\n"
-"border-color: rgb(255, 255, 255);")
+                                             "font: 16pt \"MS Shell Dlg 2\";\n"
+                                             "border-radius: 8px 8px 8px 8px;\n"
+                                             "background-color: palette(base);\n"
+                                             "color: rgb(102, 102, 102);\n"
+                                             "border-color: rgb(255, 255, 255);")
         self.textEdit_kodBlogu.setLineWidth(1)
         self.textEdit_kodBlogu.setObjectName("textEdit_kodBlogu")
         self.verticalLayout.addWidget(self.textEdit_kodBlogu)
@@ -150,11 +173,11 @@ class Ui_MainWindow(object):
         self.textEdit_console.setMinimumSize(QtCore.QSize(500, 0))
         self.textEdit_console.setMaximumSize(QtCore.QSize(16777215, 200))
         self.textEdit_console.setStyleSheet("border: 1px solid;\n"
-"font: 16pt \"MS Shell Dlg 2\";\n"
-"border-radius: 8px 8px 8px 8px;\n"
-"background-color: palette(base);\n"
-"color: rgb(170, 0, 127);\n"
-"border-color: rgb(255, 255, 255);")
+                                            "font: 16pt \"MS Shell Dlg 2\";\n"
+                                            "border-radius: 8px 8px 8px 8px;\n"
+                                            "background-color: palette(base);\n"
+                                            "color: rgb(170, 0, 127);\n"
+                                            "border-color: rgb(255, 255, 255);")
         self.textEdit_console.setObjectName("textEdit_console")
         self.verticalLayout.addWidget(self.textEdit_console)
         self.horizontalLayout.addLayout(self.verticalLayout)
@@ -166,9 +189,7 @@ class Ui_MainWindow(object):
         self.frame_sagMenuParent.setSizePolicy(sizePolicy)
         self.frame_sagMenuParent.setMinimumSize(QtCore.QSize(325, 0))
         self.frame_sagMenuParent.setMaximumSize(QtCore.QSize(325, 16777215))
-        self.frame_sagMenuParent.setStyleSheet("background-color: #cad7e0;\n"
-                                               "    border-radius: 8px 8px 8px 8px;")
-
+        self.frame_sagMenuParent.setStyleSheet("background-color: #cad7e0;\n"                                            "    border-radius: 8px 8px 8px 8px;")
         self.frame_sagMenuParent.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_sagMenuParent.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_sagMenuParent.setObjectName("frame_sagMenuParent")
@@ -184,13 +205,11 @@ class Ui_MainWindow(object):
         self.frame_sagMenu2.setObjectName("frame_sagMenu2")
         self.label_robot = QtWidgets.QLabel(self.frame_sagMenu2)
         self.label_robot.setGeometry(QtCore.QRect(20, 0, 91, 71))
-        self.label_robot.setStyleSheet("image: url(:/icon/images/robot.png);\n"
-                                          "background-color: transparent;")
+        self.label_robot.setStyleSheet("image: url(images/robot.png);\n"
+                                       "background-color: transparent;")
         self.label_robot.setText("")
         self.label_robot.setObjectName("label_robot")
-
         self.verticalLayout_sagMenu.addWidget(self.frame_sagMenu2)
-
         self.textEdit_message = QtWidgets.QTextEdit(self.frame_sagMenuParent)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -202,7 +221,7 @@ class Ui_MainWindow(object):
                                             "    font-size: 10pt; \n"
                                             "    font-weight: 475;\n"
                                             "    text-align: right;   \n"
-                                            "    background-color: #cad7e0;\n"  
+                                            "    background-color: #cad7e0;\n"
                                             "    border:0;  /* kenarlık olmasın */\n"
                                             "")
         self.textEdit_message.setObjectName("textEdit_message")
@@ -240,7 +259,7 @@ class Ui_MainWindow(object):
         self.pushButton_smile.setStyleSheet("background-color: transparent;")
         self.pushButton_smile.setText("")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/icon/images/happy.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("images/happy.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_smile.setIcon(icon)
         self.pushButton_smile.setIconSize(QtCore.QSize(45, 45))
         self.pushButton_smile.setObjectName("pushButton_smile")
@@ -255,21 +274,21 @@ class Ui_MainWindow(object):
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
         self.textEdit_searchEdit = QtWidgets.QTextEdit(self.frame)
-        self.textEdit_searchEdit.setGeometry(QtCore.QRect(0, 10, 250, 45))
+        self.textEdit_searchEdit.setGeometry(QtCore.QRect(10, 10, 283, 45))
         self.textEdit_searchEdit.setStyleSheet("border: 1px solid;\n"
-"font: 16pt \"MS Shell Dlg 2\";\n"
-"border-color: rgb(156, 156, 156);\n"
-"border-radius: 8px 8px 8px 8px;\n"
-"background-color: palette(base);\n"
-"color: rgb(102, 102, 102)")
+                                               "font: 16pt \"MS Shell Dlg 2\";\n"
+                                               "border-color: rgb(156, 156, 156);\n"
+                                               "border-radius: 8px 8px 8px 8px;\n"
+                                               "background-color: palette(base);\n"
+                                               "color: rgb(102, 102, 102)")
         self.textEdit_searchEdit.setObjectName("textEdit_searchEdit")
         self.pushButton_searchEdit = QtWidgets.QPushButton(self.frame)
-        self.pushButton_searchEdit.setGeometry(QtCore.QRect(250, 10, 50, 45))
-        self.pushButton_searchEdit.setStyleSheet("background-image:url(:/icon/search.png);\n"
-"background-repeat: no-repeat;\n")
+        self.pushButton_searchEdit.setGeometry(QtCore.QRect(293, 10, 50, 45))
+        self.pushButton_searchEdit.setStyleSheet("background-image:url(search.png);\n"
+                                                 "background-repeat: no-repeat;\n")
         self.pushButton_searchEdit.setText("")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/icon/images/search.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("images/search.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_searchEdit.setIcon(icon)
         self.pushButton_searchEdit.setIconSize(QtCore.QSize(30, 30))
         self.pushButton_searchEdit.setObjectName("pushButton_searchEdit")
@@ -282,24 +301,23 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.pushButton_add = QtWidgets.QPushButton(self.horizontalLayoutWidget_2)
         self.pushButton_add.setStyleSheet("QPushButton {\n"
-"    background-color: transparent;\n"
-"    background-repeat: no-repeat;\n"
-" }")
+                                          "    background-color: transparent;\n"
+                                          "    background-repeat: no-repeat;\n"
+                                          " }")
         self.pushButton_add.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/icon/images/add_dark.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("images/add_dark.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_add.setIcon(icon1)
         self.pushButton_add.setIconSize(QtCore.QSize(64, 64))
         self.pushButton_add.setCheckable(True)
         self.pushButton_add.setObjectName("pushButton_add")
         self.horizontalLayout_2.addWidget(self.pushButton_add)
         self.pushButton_document = QtWidgets.QPushButton(self.horizontalLayoutWidget_2)
-        self.pushButton_document.setStyleSheet("background-image: url(:/icon/images/document.png);\n"
-"background-color: transparent;\n"
-"background-repeat: no-repeat;")
+        self.pushButton_document.setStyleSheet("background-color: transparent;\n"
+                                               "background-repeat: no-repeat;")
         self.pushButton_document.setText("")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(":/icon/images/document_dark.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap("images/document_dark.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_document.setIcon(icon2)
         self.pushButton_document.setIconSize(QtCore.QSize(64, 64))
         self.pushButton_document.setCheckable(True)
@@ -307,11 +325,10 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.addWidget(self.pushButton_document)
         self.pushButton_play = QtWidgets.QPushButton(self.horizontalLayoutWidget_2)
         self.pushButton_play.setStyleSheet("background-color: transparent;\n"
-"background-repeat: no-repeat;\n"
-"background-image: url(:/icon/images/play.png);")
+                                           "background-repeat: no-repeat;\n")
         self.pushButton_play.setText("")
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(":/icon/images/play_dark.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap("images/play_dark.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_play.setIcon(icon3)
         self.pushButton_play.setIconSize(QtCore.QSize(64, 64))
         self.pushButton_play.setCheckable(True)
@@ -319,26 +336,25 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.addWidget(self.pushButton_play)
         self.gridLayout.addWidget(self.frame, 2, 0, 1, 1)
         self.frame_header = QtWidgets.QFrame(self.centralwidget)
-        self.frame_header.setMinimumSize(QtCore.QSize(0, 125))
-        self.frame_header.setStyleSheet("background-color:  #b9e6fb;")
+        self.frame_header.setMinimumSize(QtCore.QSize(0, 115))
+        self.frame_header.setStyleSheet("background-color:  #394b58;")
         self.frame_header.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_header.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_header.setObjectName("frame_header")
         self.label_baslik = QtWidgets.QLabel(self.frame_header)
-        self.label_baslik.setGeometry(QtCore.QRect(-649, 30, 1721, 111))
+        self.label_baslik.setGeometry(QtCore.QRect(-695, 30, 1721, 111))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_baslik.sizePolicy().hasHeightForWidth())
         self.label_baslik.setSizePolicy(sizePolicy)
         self.label_baslik.setMaximumSize(QtCore.QSize(16777215, 111))
-        self.label_baslik.setStyleSheet("\n"
-"image: url(:/icon/images/logoyazi.png);\n")
+        self.label_baslik.setStyleSheet("image: url(images/pynar_yazi.png);\n")
         self.label_baslik.setText("")
         self.label_baslik.setObjectName("label_baslik")
         self.label_logo = QtWidgets.QLabel(self.frame_header)
-        self.label_logo.setGeometry(QtCore.QRect(6, 0, 140, 131))
-        self.label_logo.setStyleSheet("image: url(:/icon/images/logo.png);")
+        self.label_logo.setGeometry(QtCore.QRect(6, -10, 100, 131))
+        self.label_logo.setStyleSheet("image: url(images/pynar_image.png);")
         self.label_logo.setText("")
         self.label_logo.setObjectName("label_logo")
         self.gridLayout.addWidget(self.frame_header, 0, 0, 1, 1)
@@ -352,75 +368,74 @@ class Ui_MainWindow(object):
         MainWindow.setMenuBar(self.menubar)
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        self.retranslateUi(MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        self.treeView.setWhatsThis(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:48pt; font-weight:600;\">asasas</span></p></body></html>"))
-        self.textEdit_kodBlogu.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:16pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
-        self.textEdit_console.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:16pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">&gt;&gt;&gt;</p></body></html>"))
+        self.treeView.setWhatsThis(_translate("MainWindow",
+                                              "<html><head/><body><p><span style=\" font-size:48pt; font-weight:600;\">asasas</span></p></body></html>"))
+        self.textEdit_kodBlogu.setHtml(_translate("MainWindow",
+                                                  "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                                                  "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                                                  "p, li { white-space: pre-wrap; }\n"
+                                                  "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:16pt; font-weight:400; font-style:normal;\">\n"
+                                                  "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+        self.textEdit_console.setHtml(_translate("MainWindow",
+                                                 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                                                 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                                                 "p, li { white-space: pre-wrap; }\n"
+                                                 "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:16pt; font-weight:400; font-style:normal;\">\n"
+                                                 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">&gt;&gt;&gt;</p></body></html>"))
 
-
-
-ballon="""
+ballon = """
 <table border="0" cellpadding="0" cellspacing="0">
       <tr>
-         <td><img src=":/icon/images/sol_ust_beyaz.gif"></td>
+         <td><img src="images/sol_ust_beyaz.gif"></td>
          <td bgcolor="#ffffff"></td>
-         <td><img src=":/icon/images/sag_ust_beyaz.gif"></td>
-		 <td width="40"><img src=":/icon/images/transparent.gif"></td>
+         <td><img src="images/sag_ust_beyaz.gif"></td>
+		 <td width="40"><img src="images/transparent.gif"></td>
       </tr>
       <tr>
-         <td background=":/icon/images/sol_orta_beyaz.gif">&nbsp;</td>
+         <td background="images/sol_orta_beyaz.gif">&nbsp;</td>
          <td bgcolor="#ffffff" style="">{}<div align="right" style="font-size: 9px;color: #1BA44C;">{}</div></td>
          <td bgcolor="#ffffff">&nbsp;</td>
-		 <td width="40"><img src=":/icon/images/transparent.gif"></td>
+		 <td width="40"><img src="images/transparent.gif"></td>
       </tr>
       <tr>
-         <td><img src=":/icon/images/sol_alt_beyaz.gif"></td>
-         <td bgcolor="#ffffff"><img src=":/icon/images/transparent.gif"></td>
-         <td><img src=":/icon/images/sag_alt_beyaz.gif"></td>
-		 <td width="40"><img src=":/icon/images/transparent.gif"></td>
+         <td><img src="images/sol_alt_beyaz.gif"></td>
+         <td bgcolor="#ffffff"><img src="images/transparent.gif"></td>
+         <td><img src="images/sag_alt_beyaz.gif"></td>
+		 <td width="40"><img src="images/transparent.gif"></td>
       </tr>
 </table>
 """
 
-ballon_Kullanici="""
+ballon_Kullanici = """
 <table border="0" cellpadding="0" cellspacing="0" align="right">
       <tr>
-         <td width="40"><img src=":/icon/images/transparent.gif"></td>
-		 <td><img src=":/icon/images/sol_ust_yesil.gif"></td>
-         <td bgcolor="#e9fedd"><img src=":/icon/images/transparent.gif"></td>
-         <td><img src=":/icon/images/sag_ust_yesil.gif"></td>
+         <td width="40"><img src="images/transparent.gif"></td>
+		 <td><img src="images/sol_ust_yesil.gif"></td>
+         <td bgcolor="#e9fedd"><img src="images/transparent.gif"></td>
+         <td><img src="images/sag_ust_yesil.gif"></td>
       </tr>
       <tr >
-		 <td width="40"><img src=":/icon/images/transparent.gif"></td>
+		 <td width="40"><img src="images/transparent.gif"></td>
          <td bgcolor="#e9fedd">&nbsp;</td>
          <td bgcolor="#e9fedd" style="">{}<div align="right" style="font-size: 9px;color: #1BA44C;">{}</div></td>
          </td>
-         <td background=":/icon/images/sag_orta_yesil.gif">&nbsp;</td>
+         <td background="images/sag_orta_yesil.gif">&nbsp;</td>
       </tr>
       <tr>
-		 <td width="40"><img src=":/icon/images/transparent.gif"></td>
-         <td><img src=":/icon/images/sol_alt_yesil.gif"></td>
-         <td bgcolor="#e9fedd"><img src=":/icon/images/transparent.gif"></td>
-         <td><img src=":/icon/images/sag_alt_yesil.gif"></td>
+		 <td width="40"><img src="images/transparent.gif"></td>
+         <td><img src="images/sol_alt_yesil.gif"></td>
+         <td bgcolor="#e9fedd"><img src="images/transparent.gif"></td>
+         <td><img src="images/sag_alt_yesil.gif"></td>
       </tr>
 </table>
 """
-
-
-
 import icons_rc
-
-#endregion
+# endregion
 
 
 class SecondWindow(QtWidgets.QDialog):
@@ -434,8 +449,7 @@ class SecondWindow(QtWidgets.QDialog):
         self.setMinimumSize(QSize(270, 157))
         self.setMaximumSize(QSize(270, 157))
         self.setWindowTitle("Emojiler")
-        self.setWindowIcon(QIcon(':/icon/images/smile.png'))
-
+        self.setWindowIcon(QIcon('images/smile.png'))
         """
             Emojiye tıklanıldığında fonksiyon, emojinin karşılığını password adında görünmeyen bir label'a yazıyor. Dialog bittiğinde ise
             label'daki yazı userinput'a gönderiliyor. Farklı yollar denedik. Direkt olarak butona tıklandığında ana pencere sınıfına ulaşıp orada
@@ -445,40 +459,35 @@ class SecondWindow(QtWidgets.QDialog):
 
         self.password = QtWidgets.QLineEdit(self)
         self.password.setGeometry(200, 300, 50, 30)
-
         self.gulucuk = QPushButton(self)
         self.gulucuk.setStyleSheet(
-            "background-image: url(:/icon/images/smile.png);background-repeat: no-repeat;border: none;outline: none;")
+            "background-image: url(images/smile.png);background-repeat: no-repeat;border: none;outline: none;")
         self.gulucuk.setGeometry(5, 5, 70, 60)
         self.gulucuk.clicked.connect(self.gulucukKoy)
-
         self.uzgun = QPushButton(self)
         self.uzgun.setStyleSheet(
-            "background-image: url(:/icon/images/uzgun.png);background-repeat: no-repeat;border: none;outline: none;")
+            "background-image: url(images/uzgun.png);background-repeat: no-repeat;border: none;outline: none;")
         self.uzgun.setGeometry(95, 5, 70, 60)
         self.uzgun.clicked.connect(self.uzgunSuratKoy)
-
         self.gulme = QPushButton(self)
         self.gulme.setStyleSheet(
-            "background-image: url(:/icon/images/gulme.png);background-repeat: no-repeat;border: none;outline: none;")
+            "background-image: url(images/gulme.png);background-repeat: no-repeat;border: none;outline: none;")
         self.gulme.setGeometry(185, 5, 70, 60)
         self.gulme.clicked.connect(self.gul)
 
         self.gozKirpma = QPushButton(self)
         self.gozKirpma.setStyleSheet(
-            "background-image: url(:/icon/images/kırp.png);background-repeat: no-repeat;border: none;outline: none;")
+            "background-image: url(images/kırp.png);background-repeat: no-repeat;border: none;outline: none;")
         self.gozKirpma.setGeometry(5, 80, 70, 60)
         self.gozKirpma.clicked.connect(self.gozKirp)
-
         self.duzSurat = QPushButton(self)
         self.duzSurat.setStyleSheet(
-            "background-image: url(:/icon/images/duz.png);background-repeat: no-repeat;border: none;outline: none;")
+            "background-image: url(images/duz.png);background-repeat: no-repeat;border: none;outline: none;")
         self.duzSurat.setGeometry(95, 80, 70, 60)
         self.duzSurat.clicked.connect(self.duzSuratKoy)
-
         self.sasirma = QPushButton(self)
         self.sasirma.setStyleSheet(
-            "background-image: url(:/icon/images/sasirma.png);background-repeat: no-repeat;border: none;outline: none;")
+            "background-image: url(images/sasirma.png);background-repeat: no-repeat;border: none;outline: none;")
         self.sasirma.setGeometry(185, 80, 70, 60)
         self.sasirma.clicked.connect(self.sasirmaKoy)
 
@@ -507,24 +516,50 @@ class SecondWindow(QtWidgets.QDialog):
         self.accept()
 
 
-class proje(QMainWindow):
+class WebEngineViewWindow(QWidget):
+    def __init__(self, data):
+        super().__init__()
+        layout = QVBoxLayout()
+        view = QWebEngineView()
+        view.load(QtCore.QUrl.fromLocalFile(os.getcwd() + '/HtmlDescriptions/' + data))
+        self.setWindowTitle("Yardım")
+        self.setWindowIcon(QIcon('images/help.png'))
+        layout.addWidget(view)
+        self.setLayout(layout)
+
+
+class MenuButton(QtWidgets.QPushButton):
+    moveSignal = QtCore.pyqtSignal()
+
+    def __init__(self, *args, **kwargs):
+        super(MenuButton, self).__init__(*args, **kwargs)
+        self.setFixedHeight(50)
+
+
+class Project(QMainWindow):
     childNodes = []
-    roots = []
     colors = ['#7fc97f', '#beaed4', '#fdc086', '#ffff99', '#386cb0', '#f0027f', '#bf5b17', '#666666']
     words = ["abs", "print", "while", "max", "for"]
+    descriptions = []
+    jsonFiles = []
 
-    acikNodes =[]
     def __init__(self):
         super().__init__()
+        self.activeMenu = 1
+        self.toolButtons = {}
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        #self.ReadFromJsonApi()
-        self.ReadFromFile()
+
+        path = os.path.abspath('HtmlDescriptions')
+        onlyfiles = [f for f in listdir(path) if isfile(join(path, f))]
+        self.descriptions = onlyfiles
+
+        # self.ReadFromJsonApi()  #Eğer Json datayı bir web sayfasından almak isterse kullanılabilir.
+        self.ReadFromFile('temelkomutlar.json')
         self.show()
         self.ui.treeView.setDragDropMode(QAbstractItemView.DragOnly)
         self.ui.treeView.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.ui.treeView.clicked.connect(self.expanded)
-        self.ui.treeView.doubleClicked.connect(self.collapsed)
         self.ui.pushButton_play.pressed.connect(self.PlayButtonPressed)
         self.ui.pushButton_play.released.connect(self.PlayButtonReleased)
         self.ui.pushButton_add.pressed.connect(self.AddButtonPressed)
@@ -537,21 +572,75 @@ class proje(QMainWindow):
         self.ui.pushButton_document.clicked.connect(self.DocumentButtonClick)
         self.ui.pushButton_searchEdit.clicked.connect(self.SearchButtonClick)
         self.setAcceptDrops(True)
-
         now = datetime.now()
         zaman = now.strftime("%H:%M")
         karsilama_metni = "Nasıl yardımcı olabilirim?"
         karsilama = ballon.format(karsilama_metni, zaman)
         self.ui.textEdit_message.append(karsilama)
         self.ui.textEdit_message.append("\n")
-
         self.ui.textEdit_message.setReadOnly(True)
         self.setWindowTitle("Python Kod Editörü")
-        self.setWindowIcon(QIcon(':/icon/images/logo.png'))
+        self.setWindowIcon(QIcon('images/logo.png'))
         self.ui.lineEdit_sendMessage.returnPressed.connect(self.AddToChatLogUser)
         self.ui.lineEdit_sendMessage.setEnabled(True)
         self.ui.lineEdit_sendMessage.setFocus()
-    # butona tıklandığında hem ikinici ekranı göstersin hem de tıklanılan emojiyi lineEdit_sendMessage yazsın
+        self.ui.treeView.setColumnWidth(0, 329)
+        icon = QIcon('images/up.png')
+        self.upBtn = MenuButton(icon=icon)
+        self.upBtn.setIconSize(QSize(50, 50))
+        self.upBtn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.upBtn.moveSignal.connect(self.moveUp)
+        self.upBtn.setStyleSheet("QPushButton {background-color: rgb(0,170,255); border:none}"
+                                 "QPushButton:hover {background-color: rgb(0,76,219); border:none}")
+        icon = QIcon('images/down.png')
+        self.downBtn = MenuButton(icon=icon)
+        self.downBtn.setIconSize(QSize(50, 50))
+        self.downBtn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.downBtn.moveSignal.connect(self.moveDown)
+        self.downBtn.setStyleSheet("QPushButton {background-color: rgb(0,170,255); border:none}"
+                                   "QPushButton:hover {background-color: rgb(0,76,219); border:none}")
+
+        self.listWidget = QtWidgets.QListWidget()
+        self.listWidget.setStyleSheet("background-color: #394b58; border:none; ")
+        self.listWidget.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.listWidget.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.listWidget.setFixedWidth(120)
+        self.FillMenuCategories()
+        self.listWidget.setCurrentRow(self.activeMenu)
+        self.MenuActionClick(self.jsonFiles[self.activeMenu - 1], self.activeMenu)
+        self.ui.leftMenuLayout.addWidget(self.upBtn)
+        self.ui.leftMenuLayout.addWidget(self.listWidget)
+        self.ui.leftMenuLayout.addWidget(self.downBtn)
+        self.downBtn.clicked.connect(self.moveDown)
+        self.upBtn.clicked.connect(self.moveUp)
+
+
+    """Kategorilerin bulunduğu toolbarda yukarı ilerlemeyi sağlar"""
+    @QtCore.pyqtSlot()
+    def moveUp(self):
+        ix = self.listWidget.moveCursor(QtWidgets.QAbstractItemView.MoveUp, QtCore.Qt.NoModifier)
+        self.listWidget.setCurrentIndex(ix)
+        if 1 < self.activeMenu:
+            self.toolButtons[self.activeMenu].setStyleSheet(
+                "background-color: #394b58; color: white; font: 14pt; padding-top:10px;")
+            self.activeMenu = self.activeMenu - 1
+            self.toolButtons[self.activeMenu].setStyleSheet(
+                "background-color: #6b899f; color: white; font: 14pt; padding-top:10px;")
+            self.MenuActionClick(self.jsonFiles[self.activeMenu - 1], self.activeMenu)
+
+    """Kategorilerin bulunduğu toolbarda aşağı ilerlemeyi sağlar"""
+    @QtCore.pyqtSlot()
+    def moveDown(self):
+
+        if self.menuItemCount > self.activeMenu:
+            self.toolButtons[self.activeMenu].setStyleSheet(
+                "background-color: #394b58; color: white; font: 14pt; padding-top:10px;")
+            self.activeMenu = self.activeMenu + 1
+            self.toolButtons[self.activeMenu].setStyleSheet(
+                "background-color: #6b899f; color: white; font: 14pt; padding-top:10px;")
+            self.listWidget.setCurrentRow(self.activeMenu - 1)
+            self.MenuActionClick(self.jsonFiles[self.activeMenu - 1], self.activeMenu)
+
     def emojiPage(self):
         self.SW = SecondWindow()
         if self.SW.exec_():
@@ -559,45 +648,40 @@ class proje(QMainWindow):
         self.ui.lineEdit_sendMessage.setFocus()
 
     def UpdateCycle(self):
-        '''
-        Retrieves a new bot message and appends to the chat log.
-        '''
+        """Retrieves a new bot message and appends to the chat log."""
         bmsg = self.v.getBotMessage()
         self.chatlog.setAlignment(Qt.AlignRight)
         [self.chatlog.append(m) for m in bmsg]
         self.userinput.setFocus()
 
-    def ReplaceToEmoji(self, mesaj):
-        yeniMesaj = mesaj
-        if (":)" in mesaj):
-            yeniMesaj = yeniMesaj.replace(':)', ' &#128522; ')
-        if (":(" in mesaj):
-            yeniMesaj = yeniMesaj.replace(':(', ' &#128542; ')
-        if (":D" in mesaj):
-            yeniMesaj = yeniMesaj.replace(':D', ' &#128516; ')
-        if (":O" in mesaj):
-            yeniMesaj = yeniMesaj.replace(':O', ' &#128558; ')
-        if (";)" in mesaj):
-            yeniMesaj = yeniMesaj.replace(';)', ' &#128521; ')
-        if (":|" in mesaj):
-            yeniMesaj = yeniMesaj.replace(':|', ' &#128528; ')
-        return yeniMesaj
+    def ReplaceToEmoji(self, message):
+        newMessage = message
+        if ":)" in message:
+            newMessage = newMessage.replace(':)', ' &#128522; ')
+        if ":(" in message:
+            newMessage = newMessage.replace(':(', ' &#128542; ')
+        if ":D" in message:
+            newMessage = newMessage.replace(':D', ' &#128516; ')
+        if ":O" in message:
+            newMessage = newMessage.replace(':O', ' &#128558; ')
+        if ";)" in message:
+            newMessage = newMessage.replace(';)', ' &#128521; ')
+        if ":|" in message:
+            newMessage = newMessage.replace(':|', ' &#128528; ')
+        return newMessage
 
     def AddToChatLogUser(self):
-        '''
-        Takes guest's entry and appends to the chatlog
-        '''
-        mesaj = self.ui.lineEdit_sendMessage.text()
-        if mesaj is not '':
-            umsg = Chat(mesaj, pairs, reflections)
-            umsg.converse(mesaj, quit='tamam')
-            sql_konusma_modeli.mesaj_ekle(mesaj, umsg.__repr__())
+        """Takes guest's entry and appends to the chatlog"""
+        message = self.ui.lineEdit_sendMessage.text()
+        if message != '':
+            umsg = Chat(message, pairs, reflections)
+            umsg.converse(message, quit='tamam')
+            SqlSpeakModel.mesaj_ekle(message, umsg.__repr__())
             self.ui.textEdit_message.setAlignment(Qt.AlignLeft)
             now = datetime.now()
             zaman = now.strftime("%H:%M")
             ballonmesaj = ballon.format(umsg.__repr__(), zaman)
-            splitting = self.ReplaceToEmoji(
-                mesaj)  # Mesajın içerisinde emojisi simgesi bulunup bulunmadığını kontrol et.
+            splitting = self.ReplaceToEmoji(message)
             ballonKullanici = ballon_Kullanici.format(splitting, zaman)
             self.ui.textEdit_message.append(ballonKullanici)
             self.ui.textEdit_message.append("\n")
@@ -609,28 +693,10 @@ class proje(QMainWindow):
 
     # region TreeviewOperations
     def expanded(self, index):
-         if not self.ui.treeView.isExpanded(index):
-             if self.roots.__contains__(index.data()):
-                 if len(self.acikNodes) > 0:
-                     for item in self.acikNodes:
-                         if item.data != index.data:
-                             self.ui.treeView.collapse(item)
-                             if self.acikNodes.__contains__(item.data()):
-                                self.acikNodes.remove(item)
-                 self.ui.treeView.expand(index)
-                 self.acikNodes.append(index)
-             else:
-                 self.ui.treeView.expand(index)
-                 self.acikNodes.append(index)
-         else:
-            self.ui.treeView.collapse(index)
-            if self.acikNodes.__contains__(index):
-                self.acikNodes.remove(index)
-
-
-    def collapsed(self, item):
-        i=1
-        #self.ui.treeView.collapse(item)
+        keyVal = index.data() + ".html"
+        if keyVal in self.descriptions:
+            self.pencere = WebEngineViewWindow(keyVal)
+            self.pencere.show()
 
     def dragEnterEvent(self, event):
         event.accept()
@@ -656,17 +722,57 @@ class proje(QMainWindow):
 
         for word in self.words:
             data = data.replace(word, "<span style=\" color:#aa007f;\">" + word + "</span>")
-
         data = data.replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;")
         self.ui.textEdit_kodBlogu.append(data)
 
-    def ReadFromFile(self):
-        with open(os.path.abspath('solmenu.json'), encoding='utf-8') as f:
+    def ReadFromFile(self, dosya):
+        with open(os.path.abspath('JsonFiles/' + dosya), encoding='utf-8') as f:
             data = json.load(f)
         model = QStandardItemModel(0, 1, self.ui.treeView)
         model.setHeaderData(0, Qt.Horizontal, None)
         self.ui.treeView.setModel(model)
         self.TreeViewFill(model, data)
+
+    def FillMenuCategories(self):
+        with open(os.path.abspath('JsonFiles/Menus.json'), encoding='utf-8') as f:
+            leftMenuJson = json.load(f)
+        i = 1
+        self.menuItemCount = len(leftMenuJson.items())
+        for root, children in leftMenuJson.items():
+            item = QtWidgets.QListWidgetItem()
+            widget = QWidget()
+            jsonfile = children['jsonfile']
+            self.jsonFiles.append(children['jsonfile'])
+            self.toolButtons[i] = toolButton = QtWidgets.QToolButton()
+            toolButton.setStyleSheet(
+                "QToolButton {background-color: #394b58; color: white; font: 14pt; padding-top:10px;}\n"
+                "QToolButton:hover {background-color: #6b899f; color: white; font: 14pt; padding-top:10px;}\n")
+            toolButton.setFixedWidth(120)
+            toolButton.setFixedHeight(134)
+            self.toolButtons[1].setStyleSheet("background-color: #6b899f; color: white; font: 14pt; padding-top:10px;")
+            self.activeMenu = 1
+            icon = QtGui.QIcon()
+            icon.addPixmap(QtGui.QPixmap(children['icon']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+            toolButton.setIconSize(QtCore.QSize(50, 50))
+            toolButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
+            toolButton.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+            toolButton.setIcon(icon)
+            toolButton.setText(root)
+            self.toolButtons[i].clicked.connect(
+                lambda checked, index=i, jsonfile=jsonfile: self.MenuActionClick(jsonfile, index))
+            toolButton.setObjectName("toolButton")
+            toolButton.raise_()
+
+            widgetLayout = QHBoxLayout()
+            widgetLayout.addWidget(toolButton)
+            widgetLayout.addStretch()
+            widgetLayout.setSizeConstraint(QLayout.SetFixedSize)
+            widgetLayout.setContentsMargins(0, 0, 0, 0)
+            widget.setLayout(widgetLayout)
+            item.setSizeHint(widget.sizeHint())
+            self.listWidget.addItem(item)
+            self.listWidget.setItemWidget(item, widget)
+            i = i + 1
 
     def ReadFromJsonApi(self):
         payload = [{"__class__": "ServerRequest", "requestData": [], "requestClass": "TradeService",
@@ -682,34 +788,29 @@ class proje(QMainWindow):
         i = 0
         for root, children in data.items():
             parent = QStandardItem(root)
-
             self.AddChild(children, parent)
             model.setItem(i, 0, parent)
             self.ui.treeView.setFirstColumnSpanned(i, self.ui.treeView.rootIndex(), True)
-
-            self.roots.append(root)
             i += 1
 
     def AddChild(self, children, parent):
         if isinstance(children, dict):
             for item, items in children.items():
                 child = QStandardItem(item)
+                parent.setIcon(QIcon('images/help.png'))
+                child.setIcon(QIcon('images/help.png'))
                 parent.appendRow(child)
                 self.AddChild(items, child)
-        elif children is not None:  # if there is one node
+        elif children != None:  # if there is one node
             node = QStandardItem(children)
+            node.setToolTip("Bu kodu editöre sürükle-bırak şeklinde taşıyabilirsiniz")
             self.childNodes.append(children)
             parent.appendRow(node)
-
-
-
-
 
     # endregion
 
     # region ButtonClick
     def PlayButtonClick(self):
-
         code = self.ui.textEdit_kodBlogu.toPlainText()
         if code:
             old_stdout = sys.stdout
@@ -726,49 +827,49 @@ class proje(QMainWindow):
     def AddButtonClick(self):
         b = 1
 
-
     def DocumentButtonClick(self):
-        b=1
-
+        b = 1
 
     def SearchButtonClick(self):
-        # aranan = self.ui.textEdit_searchEdit.toPlainText()
+        s=1
 
-
-        a = self.ui.treeView.keyboardSearch('a')
-
-        #obj_type = type('Döngüler')
-        #idx = self.sourceModel().index(sourceRow, 0, sourceParent)
-        #a = self.ui.treeView.findChildren(str, 'a')
-        print(str(a))
-
+    def MenuActionClick(self, jsonFile, index):
+        if (self.activeMenu != 0):
+            self.toolButtons[self.activeMenu].setStyleSheet(
+                "background-color: #394b58; color: white; font: 14pt; padding-top:10px;")
+        self.toolButtons[index].setStyleSheet("background-color: #6b899f; color: white; font: 14pt; padding-top:10px;")
+        self.ReadFromFile(jsonFile)
+        self.activeMenu = index
 
     # endregion
 
     # region PressedReleasedCodes
 
     def AddButtonPressed(self):
-        self.ui.addButton.setIcon(QIcon(":/icon/images/add_light.png"))
+        self.ui.addButton.setIcon(QIcon("images/add_light.png"))
+
     def AddButtonReleased(self):
-        self.ui.addButton.setIcon(QIcon(":/icon/images/add_dark.png"))
+        self.ui.addButton.setIcon(QIcon("images/add_dark.png"))
+
     def PlayButtonPressed(self):
         if self.ui.textEdit_kodBlogu.toPlainText():
-            self.ui.pushButton_play.setIcon(QIcon(":/icon/images/play_light.png"))
+            self.ui.pushButton_play.setIcon(QIcon("images/play_light.png"))
+
     def PlayButtonReleased(self):
-        self.ui.pushButton_play.setIcon(QIcon(":/icon/images/play_dark.png"))
+        self.ui.pushButton_play.setIcon(QIcon("images/play_dark.png"))
+
     def DocumentButtonPressed(self):
-        self.ui.pushButton_document.setIcon(QIcon(":/icon/images/document_light.png"))
+        self.ui.pushButton_document.setIcon(QIcon("images/document_light.png"))
+
     def DocumentButtonReleased(self):
-        self.ui.pushButton_document.setIcon(QIcon(":/icon/images/document_dark.png"))
-    #endregion
-
-
+        self.ui.pushButton_document.setIcon(QIcon("images/document_dark.png"))
+    # endregion
 
 
 if __name__ == "__main__":
-    uygulama = QApplication([])
+    application = QApplication([])
     veritabaniBaglan()
-    sql_konusma_modeli = SqlKonusmaModeli()
-    pencere = proje()
-    pencere.show()
-    uygulama.exec_()
+    SqlSpeakModel = SqlKonusmaModeli()
+    window = Project()
+    window.show()
+    application.exec_()
